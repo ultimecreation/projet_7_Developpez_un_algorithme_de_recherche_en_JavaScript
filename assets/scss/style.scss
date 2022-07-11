@@ -1,0 +1,28 @@
+@import "../../node_modules/bootstrap/scss/bootstrap.scss";
+@import "../../node_modules/bootstrap/";
+@import "./_variables.scss";
+@import "./_navigation.scss";
+
+
+.container{
+    max-width: 1240px;
+}
+#recipe-container{
+    padding: 0; 
+    .card{
+        max-width:380px;
+        &-body__header{
+            h2,span{
+                font-size: 1.2rem;
+            }
+        }
+        &-body__infos{
+            font-size: 0.9rem;
+      }
+        
+    }
+    img{
+        height: 180px;
+    }
+
+} 
