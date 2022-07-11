@@ -7,16 +7,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/assets/css/style.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"
-        defer></script>
-        
-       <script src="/assets/js/main.js"></script>
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js" defer></script>
+
+    <script src="/assets/js/main.js"></script>
 
     <title>Les petits plats</title>
 </head>
 
 <body>
+
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid d-flex flex-column">
             <a class="navbar-brand text-center d-block" href="/">
@@ -27,28 +26,60 @@
 
             <form class="d-flex container nav__search">
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control border-end-0 py-3" placeholder="Rechercher une recette" aria-label="Rechercher une recette" aria-describedby="button-addon2">
-                    <button class="btn btn-outline-secondary border-start-0" type="button" id="button-addon2"><i class="fa-solid fa-magnifying-glass text-dark"></i></button>
+                    <input type="text" class="form-control border-end-0 py-3" placeholder="Rechercher une recette"
+                        aria-label="Rechercher une recette" aria-describedby="button-addon2">
+                    <button class="btn btn-outline-secondary border-start-0" type="button" id="button-addon2"><i
+                            class="fa-solid fa-magnifying-glass text-dark"></i></button>
                 </div>
             </form>
 
         </div>
     </nav>
-    <div class="tag-container"></div>
-    <div class="input-group">
-        <input type="text" class="form-control" aria-label="Text input with dropdown button">
-        <div class="input-group-append">
-          <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</button>
-          <div class="dropdown-menu">
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <a class="dropdown-item" href="#">Something else here</a>
-            <div role="separator" class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Separated link</a>
-          </div>
-        </div>
-      </div>
-    <div id="recipe-container" class="container d-flex flex-wrap justify-content-center justify-content-md-between"></div>
+    <div class="tag-container container"></div>
+
+    <div id="form-container" class="container p-0 d-flex ">
+        <form class="col-2">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control bg-primary py-4" aria-label="Text input with dropdown button"
+                    placeholder="Ingredients">
+                <button data-items="ingredients" class="btn btn-outline-secondary dropdown-toggle bg-primary text-white border-0" type="button"
+                     aria-expanded="false">
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <ul id="ingredients-container" class="bg-primary list-unstyled my-columns p-2">
+                                     
+                </ul>
+            </div>
+        </form>
+        <form class="col-2 ms-1">
+            <div class="input-group mb-3 ">
+                <input type="text" class="form-control bg-success py-4" aria-label="Text input with dropdown button"  placeholder="Appareils">
+                <button data-items="appliance" class="btn btn-outline-secondary dropdown-toggle bg-success text-white border-0" type="button" 
+                    aria-expanded="false">
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <ul id="appliance-container" class="bg-success list-unstyled my-columns p-2">
+                    
+                </ul>
+            </div>
+        </form>
+        <form class="col-2 ms-1">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control bg-warning py-4" aria-label="Text input with dropdown button"  placeholder="Ustensils">
+                <button data-items="ustensils" class="btn btn-outline-secondary dropdown-toggle bg-warning text-white border-0" type="button" 
+                    aria-expanded="false">
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <ul id="ustensils-container" class="bg-warning list-unstyled my-columns p-2">
+                    
+                </ul>
+            </div>
+        </form>
+    </div>
+
+
+    <div id="recipe-container" class="container d-flex flex-wrap justify-content-center justify-content-md-between">
+    </div>
 </body>
 
 </html>

@@ -1,11 +1,14 @@
 @import "../../node_modules/bootstrap/scss/bootstrap.scss";
-@import "../../node_modules/bootstrap/";
 @import "./_variables.scss";
 @import "./_navigation.scss";
 
 
 .container{
     max-width: 1240px;
+}
+.dropdown-toggle::after{
+    content:"";
+    display: none;
 }
 #recipe-container{
     padding: 0; 
@@ -26,3 +29,43 @@
     }
 
 } 
+#form-container{
+    form{
+        // &:nth-of-type(2){
+        //     position:relative;
+            
+        // }
+        // &:nth-of-type(3){
+        //     position:relative;
+            
+        // }
+    }
+    .input-group{
+        width: 160px;
+        position:relative;
+        
+       
+        input.form-control{
+           
+            &::placeholder{
+                color: white;
+            }
+           
+        }
+        ul{
+            display:none;
+            position:absolute;
+            left:1px;
+            top: 4.5rem;
+            z-index: 1;
+        }
+    } 
+}
+.my-columns{
+    columns:3;
+
+    .dropdown-item:hover,.dropdown-item:focus {
+        color: $dark!important;
+        background: $white;
+    }
+}
