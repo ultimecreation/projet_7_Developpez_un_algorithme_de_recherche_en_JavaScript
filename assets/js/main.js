@@ -74,14 +74,14 @@ window.addEventListener('DOMContentLoaded', async () => {
             const parent = currentBtn.parentElement.parentElement
             const inputGroup = filterForm.querySelector('.input-group')
             const ulStyle = window.getComputedStyle(ul);
- 
+
             // dropdown is already open,the user clicked to close it
-            if(icon.classList.contains('fa-chevron-up')){
+            if (icon.classList.contains('fa-chevron-up')) {
                 resetFiltersDisplay()
-                icon.classList.replace('fa-chevron-up','fa-chevron-down')
+                icon.classList.replace('fa-chevron-up', 'fa-chevron-down')
                 return
             }
-            
+
             // the dropdown is closed, open it
             resetFiltersDisplay()
             toggleIcon(currentBtn)
@@ -90,7 +90,7 @@ window.addEventListener('DOMContentLoaded', async () => {
             inputGroup.style.width = ulStyle.width
         })
     })
- 
+
     /**
      * add a new button into the tags container
      * each time the user click on 1 of the dropdown links
@@ -99,12 +99,12 @@ window.addEventListener('DOMContentLoaded', async () => {
      *
      * @return  {VOID}              
      */
-    const handleClickOnFiltersLinks = () =>  filterForms.forEach(filterForm => {
+    const handleClickOnFiltersLinks = () => filterForms.forEach(filterForm => {
         // bind links from dom
         const links = filterForm.querySelectorAll('ul a.dropdown-item')
 
-        links.forEach(link =>{
-            link.addEventListener('click', e=>{
+        links.forEach(link => {
+            link.addEventListener('click', e => {
                 // bind dom elements and initialize variables 
                 const parentElement = e.target.parentElement.parentElement
                 const linkTextContent = e.target.textContent
@@ -112,9 +112,9 @@ window.addEventListener('DOMContentLoaded', async () => {
                 let classType = 'warning'
 
                 // define a classType for each type of dropdowns
-                if(parentElement.id.startsWith('ingredients')) classType = 'primary'
-                else if(parentElement.id.startsWith('appliance')) classType = 'success'
-                
+                if (parentElement.id.startsWith('ingredients')) classType = 'primary'
+                else if (parentElement.id.startsWith('appliance')) classType = 'success'
+
                 // generate the html button
                 output = `
                     <button class="btn btn-small btn-${classType} m-1 text-white">
@@ -128,7 +128,7 @@ window.addEventListener('DOMContentLoaded', async () => {
                 tagContainer.innerHTML += output
             })
         })
-        
+
     })
 
     /**
@@ -137,7 +137,7 @@ window.addEventListener('DOMContentLoaded', async () => {
      *
      * @return  {void}  
      */
-    const handleTagDeletionFromTagContainer = ()=>{
+    const handleTagDeletionFromTagContainer = () => {
         tagContainer.addEventListener('click', e => {
 
             // bind the closest button and remove it from the dom
@@ -145,7 +145,7 @@ window.addEventListener('DOMContentLoaded', async () => {
             itemToRemove.remove()
         })
     }
-   
+
     /**
      * revert the form and dropdown to its initial state
      *
@@ -157,13 +157,13 @@ window.addEventListener('DOMContentLoaded', async () => {
             // bind dom elements
             const inputGroup = filterForm.querySelector('.input-group')
             const ul = filterForm.querySelector('ul')
-            const icon =  filterForm.querySelector('i')
+            const icon = filterForm.querySelector('i')
 
             // apply the changes on the form and dropdown content
             inputGroup.style.width = '160px'
             filterForm.style.width = '160px'
             ul.style.display = 'none'
-            icon.classList.replace('fa-chevron-up','fa-chevron-down')
+            icon.classList.replace('fa-chevron-up', 'fa-chevron-down')
         })
     }
 
@@ -180,8 +180,8 @@ window.addEventListener('DOMContentLoaded', async () => {
 
         // toggle the down/up arrow on the dropdown
         icon.classList.contains('fa-chevron-down')
-            ? icon.classList.replace('fa-chevron-down','fa-chevron-up')
-            : icon.classList.replace('fa-chevron-up','fa-chevron-down')
+            ? icon.classList.replace('fa-chevron-down', 'fa-chevron-up')
+            : icon.classList.replace('fa-chevron-up', 'fa-chevron-down')
     }
 
     /**
@@ -195,7 +195,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         let appliance = []
         let ustensils = []
 
-    
+
         // loop through the filters forms to know what kind of data to look for
         filterForms.forEach(filterForm => {
             const itemsToFetch = filterForm.querySelector('button').dataset.items
@@ -269,13 +269,73 @@ window.addEventListener('DOMContentLoaded', async () => {
     // EVENT LISTENERS
     mainRecipeSearchInput.addEventListener('keyup', e => {
         // bind data
-        const searchString = e.target.value 
+        const searchString = e.target.value
+        let filteredRecipeIds = []
+        let filteredRecipes = []
 
-        // ignore less than 3 characters search strings
-        if(searchString.length < 3) return 
+        // start to fetch data when searchString is 3 characters or more
+        if (searchString.length > 3) {
 
-        
-        console.log(e.target.value)
+            // loop through the recipes
+            for (let i = 0; i < recipesData.length; i++) {
+
+                // bind title and description
+                let title = recipesData[i].name.toLowerCase()
+                let description = recipesData[i].description.toLowerCase()
+
+                // true if match found on title OR description
+                let titleOrDescriptiontriggerReached = title.indexOf(searchString.toLowerCase()) !== -1
+                                                    || description.indexOf(searchString.toLowerCase()) !== -1
+
+                // trigger reached, add the current recipe id if not already in array
+                if (titleOrDescriptiontriggerReached && !filteredRecipeIds.includes(recipesData[i].id)) {
+                    filteredRecipeIds.push(recipesData[i].id)
+                }
+
+                // loop through recipe ingredients
+                for (let j = 0; j < recipesData[i].ingredients.length; j++) {
+
+                    // bind data and the trigger
+                    let currentIngredient = recipesData[i].ingredients[j].ingredient.toLowerCase()
+                    let ingredientTrigger = currentIngredient.indexOf(searchString.toLowerCase()) !== -1
+
+                    // add the recipe id if a match found and recipe id not already part of the array
+                    if (ingredientTrigger && !filteredRecipeIds.includes(recipesData[i].id)) {
+                        filteredRecipeIds.push(recipesData[i].id)
+                    }
+                }
+
+            }
+        }
+
+        // no record found, display appropriate message
+        if (filteredRecipeIds.length === 0) {
+            // TO BE DONE LATER
+
+            recipeContainer.innerHTML = `
+                <div class="w-100 text-center">
+                    <i class="fa-solid fa-triangle-exclamation fa-5x text-danger"></i>
+                    <p class="text-center h2 w-75 mx-auto">Aucune recette ne correspond à votre critère "${searchString}".<br>
+                    Vous pouvez chercher "tarte aux pommes", "poisson"</p>
+                </div>
+                   
+               `
+            return
+
+        }
+
+        // populate the filteredRecipes with usable data
+        for(let i=0; i < recipesData.length; i++){
+            if(filteredRecipeIds.includes(recipesData[i].id)) 
+            {
+                filteredRecipes.push(recipesData[i])
+            }
+        }
+
+        // some record found, update UI and filters
+        displayRecipes(filteredRecipes)
+        populateFilters(filteredRecipes)
+        handleClickOnFiltersLinks()
     })
 
 })
