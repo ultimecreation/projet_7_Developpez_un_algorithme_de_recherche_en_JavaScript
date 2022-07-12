@@ -4,6 +4,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     const recipeContainer = document.querySelector('#recipe-container')
     const filterForms = document.querySelectorAll('#form-container form')
     const tagContainer = document.querySelector('#tag-container')
+    const mainRecipeSearchInput = document.querySelector('#main-recipe-search')
 
 
     // FUNCTIONS
@@ -264,5 +265,17 @@ window.addEventListener('DOMContentLoaded', async () => {
     handleClickOnFiltersBtn()
     handleClickOnFiltersLinks()
     handleTagDeletionFromTagContainer()
+
+    // EVENT LISTENERS
+    mainRecipeSearchInput.addEventListener('keyup', e => {
+        // bind data
+        const searchString = e.target.value 
+
+        // ignore less than 3 characters search strings
+        if(searchString.length < 3) return 
+
+        
+        console.log(e.target.value)
+    })
 
 })
