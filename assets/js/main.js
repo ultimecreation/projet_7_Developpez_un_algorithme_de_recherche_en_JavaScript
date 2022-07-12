@@ -74,11 +74,16 @@ window.addEventListener('DOMContentLoaded', async () => {
             const parent = currentBtn.parentElement.parentElement
             const inputGroup = filterForm.querySelector('.input-group')
             const ulStyle = window.getComputedStyle(ul);
-
+            const input = filterForm.querySelector('input')
+            const inputPlaceHolderString = icon.classList.contains('fa-chevron-up')
+                                            ? `${currentBtn.dataset.name.charAt(0).toUpperCase()}${currentBtn.dataset.name.slice(1)}`
+                                            : `Rechercher un ${currentBtn.dataset.name.slice(0,-1)}`
+ 
             // dropdown is already open,the user clicked to close it
             if (icon.classList.contains('fa-chevron-up')) {
                 resetFiltersDisplay()
-                icon.classList.replace('fa-chevron-up', 'fa-chevron-down')
+                icon.classList.replace('fa-chevron-up','fa-chevron-down')
+                input.setAttribute('placeholder',inputPlaceHolderString)
                 return
             }
 
@@ -88,6 +93,7 @@ window.addEventListener('DOMContentLoaded', async () => {
             ul.style.display = 'block'
             parent.style.width = ulStyle.width
             inputGroup.style.width = ulStyle.width
+            input.setAttribute('placeholder',inputPlaceHolderString)
         })
     })
 
@@ -157,13 +163,17 @@ window.addEventListener('DOMContentLoaded', async () => {
             // bind dom elements
             const inputGroup = filterForm.querySelector('.input-group')
             const ul = filterForm.querySelector('ul')
-            const icon = filterForm.querySelector('i')
-
+            const icon =  filterForm.querySelector('i')
+            const currentBtn =  filterForm.querySelector('button')
+            const input = filterForm.querySelector('input')
+            const inputPlaceHolderString = `${currentBtn.dataset.name.charAt(0).toUpperCase()}${currentBtn.dataset.name.slice(1)}`
+                                            
             // apply the changes on the form and dropdown content
             inputGroup.style.width = '160px'
             filterForm.style.width = '160px'
             ul.style.display = 'none'
-            icon.classList.replace('fa-chevron-up', 'fa-chevron-down')
+            icon.classList.replace('fa-chevron-up','fa-chevron-down')
+            input.setAttribute('placeholder',inputPlaceHolderString)
         })
     }
 
