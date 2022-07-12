@@ -12,10 +12,10 @@ window.addEventListener('DOMContentLoaded', async () => {
      *
      * @return  {void}  
      */
-    const displayRecipes = () => {
+    const displayRecipes = (incomingRecipeData) => {
         let output = ''
 
-        recipesData.map(recipe => {
+        incomingRecipeData.map(recipe => {
 
             // create string for ingredients list outside of the main output
             let recipeIngredientsList = ''
@@ -188,7 +188,7 @@ window.addEventListener('DOMContentLoaded', async () => {
      *
      * @return  {[object]}  
      */
-    const getRecipeTags = () => {
+    const getRecipeTags = (incomingRecipeData) => {
         // create variables to be filled later
         let ingredients = []
         let appliance = []
@@ -200,7 +200,7 @@ window.addEventListener('DOMContentLoaded', async () => {
             const itemsToFetch = filterForm.querySelector('button').dataset.items
 
             // loop through the stored data to fill workable arrays with unique values inside
-            recipesData.forEach((recipe) => {
+            incomingRecipeData.forEach((recipe) => {
                 if (itemsToFetch === 'ingredients') {
                     recipe[itemsToFetch].forEach(item => {
                         if (!ingredients.includes(item.ingredient)) ingredients.push(item.ingredient)
@@ -245,9 +245,9 @@ window.addEventListener('DOMContentLoaded', async () => {
      *
      * @return  {void} 
      */
-    const populateFilters = () => {
+    const populateFilters = (incomingRecipeData) => {
         // extract/bind data to populate the dropdowns
-        const tags = [...getRecipeTags()]
+        const tags = [...getRecipeTags(incomingRecipeData)]
         const ingredients = tags[0].ingredients
         const appliance = tags[1].appliance
         const ustensils = tags[2].ustensils
@@ -259,8 +259,8 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
 
     // INITIALIZATION
-    displayRecipes()
-    populateFilters()
+    displayRecipes(recipesData)
+    populateFilters(recipesData)
     handleClickOnFiltersBtn()
     handleClickOnFiltersLinks()
     handleTagDeletionFromTagContainer()
