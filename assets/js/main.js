@@ -76,8 +76,8 @@ window.addEventListener('DOMContentLoaded', async () => {
             const ulStyle = window.getComputedStyle(ul);
             const input = filterForm.querySelector('input')
             const inputPlaceHolderString = icon.classList.contains('fa-chevron-up')
-                                            ? `${currentBtn.dataset.items.charAt(0).toUpperCase()}${currentBtn.dataset.items.slice(1)}`
-                                            : `Rechercher un ${currentBtn.dataset.items !='appliance' ? currentBtn.dataset.items.slice(0,-1): 'appareil'}`
+                                            ? `${currentBtn.dataset.name.charAt(0).toUpperCase()}${currentBtn.dataset.name.slice(1)}`
+                                            : `Rechercher un ${currentBtn.dataset.name.slice(0,-1)}`
  
             // dropdown is already open,the user clicked to close it
             if(icon.classList.contains('fa-chevron-up')){
@@ -166,7 +166,7 @@ window.addEventListener('DOMContentLoaded', async () => {
             const icon =  filterForm.querySelector('i')
             const currentBtn =  filterForm.querySelector('button')
             const input = filterForm.querySelector('input')
-            const inputPlaceHolderString = `${currentBtn.dataset.items.charAt(0).toUpperCase()}${currentBtn.dataset.items.slice(1)}`
+            const inputPlaceHolderString = `${currentBtn.dataset.name.charAt(0).toUpperCase()}${currentBtn.dataset.name.slice(1)}`
                                             
             // apply the changes on the form and dropdown content
             inputGroup.style.width = '160px'
