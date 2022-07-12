@@ -116,10 +116,10 @@ window.addEventListener('DOMContentLoaded', async () => {
                 
                 // generate the html button
                 output = `
-                    <button class="btn btn-small btn-${classType} m-1">
+                    <button class="btn btn-small btn-${classType} m-1 text-white">
                         ${linkTextContent}
                         <i class="fa-solid fa-times ms-1 rounded-circle
-                         border border-${classType==='warning' ? 'dark':'white'} p-1"></i>
+                         border border-white p-1"></i>
                     </button>
                 `
 
