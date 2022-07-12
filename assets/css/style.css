@@ -11994,6 +11994,11 @@ fieldset:disabled .btn {
   height: 180px;
 }
 
+#form-container form {
+  padding: 0;
+  margin: 0;
+}
+
 #form-container .input-group {
   width: 160px;
   position: relative;

@@ -3,6 +3,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     const recipesData = await (await fetch('../../data/recipes.json')).json()
     const recipeContainer = document.querySelector('#recipe-container')
     const filterForms = document.querySelectorAll('#form-container form')
+    const tagContainer = document.querySelector('#tag-container')
     // const formBtns = filterForms.querySelector('button')
 
 
@@ -47,31 +48,85 @@ window.addEventListener('DOMContentLoaded', async () => {
         const formBtn = filterForm.querySelector('button')
 
         formBtn.addEventListener('click', e => {
-            resetFiltersDisplay()
             e.preventDefault()
             const currentBtn = e.target.closest('button')
+            const icon = currentBtn.querySelector('i')
             const ul = currentBtn.nextElementSibling
             const parent = currentBtn.parentElement.parentElement
             const inputGroup = filterForm.querySelector('.input-group')
             const ulStyle = window.getComputedStyle(ul);
-            const widthTest = ul.style.width
+ 
+            // dropdown is already open,the user clicked to close it
+            if(icon.classList.contains('fa-chevron-up')){
+                resetFiltersDisplay()
+                icon.classList.replace('fa-chevron-up','fa-chevron-down')
+                return
+            }
+            
+            // the dropdown is closed, open it
+            resetFiltersDisplay()
+            toggleIcon(currentBtn)
             ul.style.display = 'block'
             parent.style.width = ulStyle.width
             inputGroup.style.width = ulStyle.width
-            console.log(widthTest)
-            console.log(`'${ulStyle.width}'`)
-
         })
     })
+ 
+    const handleClickOnFiltersLinks = () =>  filterForms.forEach(filterForm => {
+        const links = filterForm.querySelectorAll('ul a.dropdown-item')
+
+        links.forEach(link =>{
+            link.addEventListener('click', e=>{
+                const parentElement = e.target.parentElement.parentElement
+                const linkTextContent = e.target.textContent
+                let output = ''
+                let classType = 'warning'
+
+                if(parentElement.id.startsWith('ingredients')) classType = 'primary'
+                else if(parentElement.id.startsWith('appliance')) classType = 'success'
+                
+                output = `
+                    <button class="btn btn-small btn-${classType} m-1">
+                        ${linkTextContent}
+                        <i class="fa-solid fa-times ms-1 rounded-circle
+                         border border-${classType==='warning' ? 'dark':'white'} p-1"></i>
+                    </button>
+                `
+
+                tagContainer.innerHTML += output
+                console.log(e.target, parentElement)
+            })
+        })
+        
+    })
+
+    const handleTagDeletionFromTagContainer = ()=>{
+        tagContainer.addEventListener('click', e => {
+            const itemToRemove = e.target.closest('button')
+            itemToRemove.remove()
+            console.log(itemToRemove)
+        })
+    }
+   
     const resetFiltersDisplay = () => {
         filterForms.forEach(filterForm => {
             const inputGroup = filterForm.querySelector('.input-group')
             const ul = filterForm.querySelector('ul')
+            const icon =  filterForm.querySelector('i')
+
             inputGroup.style.width = '160px'
             filterForm.style.width = '160px'
             ul.style.display = 'none'
-
+            icon.classList.replace('fa-chevron-up','fa-chevron-down')
         })
+    }
+
+    const toggleIcon = (btn) => {
+        const icon = btn.querySelector('i')
+
+        icon.classList.contains('fa-chevron-down')
+            ? icon.classList.replace('fa-chevron-down','fa-chevron-up')
+            : icon.classList.replace('fa-chevron-up','fa-chevron-down')
     }
 
     const getRecipeTags = () => {
@@ -131,6 +186,8 @@ window.addEventListener('DOMContentLoaded', async () => {
     displayRecipes()
     populateFilters()
     handleClickOnFiltersBtn()
+    handleClickOnFiltersLinks()
+    handleTagDeletionFromTagContainer()
     // EVENT LISTENERS
 
 
