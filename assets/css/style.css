@@ -12029,13 +12029,22 @@ fieldset:disabled .btn {
   z-index: 1;
 }
 
-.my-columns {
+.my-columns-3 {
   -webkit-columns: 3;
           columns: 3;
 }
 
-.my-columns .dropdown-item:hover,
-.my-columns .dropdown-item:focus {
+.my-columns-2 {
+  -webkit-columns: 2;
+          columns: 2;
+}
+
+.my-columns-1 {
+  -webkit-columns: 1;
+          columns: 1;
+}
+
+.dropdown-item:hover, .dropdown-item:focus {
   color: #212529 !important;
   background: #fff;
 }
