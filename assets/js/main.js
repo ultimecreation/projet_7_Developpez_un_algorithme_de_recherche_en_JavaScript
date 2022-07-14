@@ -303,6 +303,44 @@ window.addEventListener('DOMContentLoaded', async () => {
         document.querySelector('#ustensils-container').innerHTML = generateStringOutput(ustensils)
     }
 
+     const getFilteredRecipeIdsBySearchString =  (searchString) => {
+        // initialize arrays to work with
+        let filteredRecipeIds = []
+        let filteredRecipes = []
+
+        // get matches from ingredients arrays
+        const RecipeIdsFromIngredientMatches = recipesData.reduce((accumulator, currentRecipe) => {
+
+            const { ingredients } = currentRecipe
+            ingredients.forEach(current => {
+                // bind data
+                let currentIngredient = current.ingredient.toLowerCase()
+                let triggerReached = currentIngredient.indexOf(searchString) !== -1 
+                                    && !accumulator.includes(currentRecipe.id)
+                                     
+                // match found on ingredients and recipe does not belong to accumulator, add it to accumulator
+                if (triggerReached) accumulator.push(currentRecipe.id)
+            })
+            return accumulator
+        }, [])
+
+        const RecipeIdsFromTitleOrDescriptionMatches = recipesData.reduce((accumulator, currentRecipe) => {
+            // bind data
+            let currentTitle = currentRecipe.name.toLowerCase()
+            let currentDescription = currentRecipe.description.toLowerCase()
+            let triggerReached = ( currentTitle.indexOf(searchString) !== -1 || currentDescription.indexOf(searchString) !== -1 )
+                                && !accumulator.includes(currentRecipe.id)
+
+            // match found on title/description and recipe does not belong to accumulator, add it to accumulator
+            if (triggerReached) accumulator.push(currentRecipe.id)
+            return accumulator
+        }, [])
+
+        // concat arrays and remove duplicate entries with new Set
+        filteredRecipeIds = Array.from(new Set([...RecipeIdsFromIngredientMatches,...RecipeIdsFromTitleOrDescriptionMatches]))
+        return filteredRecipeIds
+    }
+
     // INITIALIZATION
     displayRecipes(recipesData)
     populateFilters(recipesData)
@@ -313,45 +351,17 @@ window.addEventListener('DOMContentLoaded', async () => {
     // EVENT LISTENERS
     mainRecipeSearchInput.addEventListener('keyup', e => {
         // bind data
-        const searchString = e.target.value.toLowerCase().trim()
-
+        const mainSearchString = e.target.value.toLowerCase().trim()
+        const tagsAlreadySelected = [...getTagsAlreadySelected(),mainSearchString]
+        
         // ignore less than 3 characters search strings
-        if (searchString.length > 2) {
-
-            // initialize arrays to work with
-            let filteredRecipeIds = []
-            let filteredRecipes = []
-
-            // get matches from ingredients arrays
-            const RecipeIdsFromIngredientMatches = recipesData.reduce((accumulator, currentRecipe) => {
-
-                const { ingredients } = currentRecipe
-                ingredients.forEach(current => {
-                    // bind data
-                    let currentIngredient = current.ingredient.toLowerCase()
-                    let triggerReached = currentIngredient.indexOf(searchString) !== -1 
-                                        && !accumulator.includes(currentRecipe.id)
-                                         
-                    // match found on ingredients and recipe does not belong to accumulator, add it to accumulator
-                    if (triggerReached) accumulator.push(currentRecipe.id)
-                })
-                return accumulator
-            }, [])
-
-            const RecipeIdsFromTitleOrDescriptionMatches = recipesData.reduce((accumulator, currentRecipe) => {
-                // bind data
-                let currentTitle = currentRecipe.name.toLowerCase()
-                let currentDescription = currentRecipe.description.toLowerCase()
-                let triggerReached = ( currentTitle.indexOf(searchString) !== -1 || currentDescription.indexOf(searchString) !== -1 )
-                                    && !accumulator.includes(currentRecipe.id)
-
-                // match found on title/description and recipe does not belong to accumulator, add it to accumulator
-                if (triggerReached) accumulator.push(currentRecipe.id)
-                return accumulator
-            }, [])
+        if (mainSearchString.length > 2) {
+            const recipeIdsArraysToMerge =  tagsAlreadySelected.map( searchString =>{
+                return getFilteredRecipeIdsBySearchString(searchString.toLowerCase())
+            })
 
             // concat arrays and remove duplicate entries with new Set
-            filteredRecipeIds = Array.from(new Set([...RecipeIdsFromIngredientMatches,...RecipeIdsFromTitleOrDescriptionMatches]))
+            filteredRecipeIds = [].concat.apply([],recipeIdsArraysToMerge)
             
             // no record found, display appropriate message
             if (filteredRecipeIds.length === 0) {
