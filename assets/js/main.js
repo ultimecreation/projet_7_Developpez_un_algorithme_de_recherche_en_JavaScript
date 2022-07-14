@@ -101,9 +101,9 @@ window.addEventListener('DOMContentLoaded', async () => {
      * add a new button into the tags container
      * each time the user click on 1 of the dropdown links
      *
-     * @param   {HTMLeLEMENT}  filterForm  
+     * @param   {HTMLElement}  filterForm  
      *
-     * @return  {VOID}              
+     * @return  {void}              
      */
     const handleClickOnFiltersLinks = () => filterForms.forEach(filterForm => {
         // bind links from dom
@@ -123,19 +123,30 @@ window.addEventListener('DOMContentLoaded', async () => {
 
                 // generate the html button
                 output = `
-                    <button class="btn btn-small btn-${classType} m-1 text-white">
+                    <button data-tag="${linkTextContent}" class="btn btn-small btn-${classType} m-1 text-white">
                         ${linkTextContent}
                         <i class="fa-solid fa-times ms-1 rounded-circle
                          border border-white p-1"></i>
                     </button>
                 `
-
-                // insert the button element into the tags container
-                tagContainer.innerHTML += output
+                
+                // get tags already selected and insert the new one if not already listed
+                const tagsAlreadySelected = getTagsAlreadySelected()
+                if(!tagsAlreadySelected.includes(linkTextContent)) tagContainer.innerHTML += output                
             })
         })
 
     })
+
+    const getTagsAlreadySelected = ()=>{
+        const tagElements =  tagContainer.querySelectorAll('button[data-tag]')
+        const tagsAlreadySelected = []
+        tagElements.forEach(tagElement => {
+            tagsAlreadySelected.push(tagElement.dataset.tag)
+        })
+
+        return tagsAlreadySelected
+    }
 
     /**
      * remove a button from tags container
@@ -361,7 +372,11 @@ window.addEventListener('DOMContentLoaded', async () => {
             displayRecipes(filteredRecipes)
             populateFilters(filteredRecipes)
             handleClickOnFiltersLinks()
+            return
         }
+        displayRecipes(recipesData)
+        populateFilters(recipesData)
+        handleClickOnFiltersLinks()
     })
 
 })
