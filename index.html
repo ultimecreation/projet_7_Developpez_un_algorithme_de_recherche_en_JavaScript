@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
@@ -20,14 +20,13 @@
         <div class="container-fluid d-flex flex-column">
             <a class="navbar-brand text-center d-block" href="/">
                 <figure>
-                    <img src="/assets/images/logo.png" width="268px" height="93px" alt="logo">
+                    <img src="/assets/images/logo.png" width="268" height="93" alt="logo">
                 </figure>
             </a>
 
             <form class="d-flex container nav__search">
                 <div class="input-group mb-3">
-                    <input id="main-recipe-search" type="text" class="form-control border-end-0 py-3" placeholder="Rechercher une recette"
-                        aria-label="Rechercher une recette" aria-describedby="button-addon2">
+                    <input id="main-recipe-search" type="text" class="form-control border-end-0 py-3" placeholder="Rechercher une recette" aria-label="Rechercher une recette" aria-describedby="main-recipe-search-btn">
                     <button id="main-recipe-search-btn" class="btn btn-outline-secondary border-start-0" type="button" ><i
                             class="fa-solid fa-magnifying-glass "></i></button>
                 </div>
@@ -40,7 +39,7 @@
     <div id="form-container" class="container p-0 d-flex mt-3">
         <form class="">
             <div class="input-group mb-3">
-                <input type="text" class="form-control bg-primary py-4" aria-label="Text input with dropdown button"
+                <input type="text" class="form-control bg-primary py-4" aria-label="ingredients"
                     placeholder="Ingredients">
                 <button data-items="ingredients" data-name="ingredients"
                     class="btn btn-outline-secondary dropdown-toggle bg-primary text-white border-0" type="button"
@@ -54,7 +53,7 @@
         </form>
         <form class="ms-4">
             <div class="input-group mb-3 ">
-                <input type="text" class="form-control bg-success py-4" aria-label="Text input with dropdown button"
+                <input type="text" class="form-control bg-success py-4" aria-label="appareils"
                     placeholder="Appareils">
                 <button data-items="appliance" data-name="appareils"
                     class="btn btn-outline-secondary dropdown-toggle bg-success text-white border-0" type="button"
@@ -68,7 +67,7 @@
         </form>
         <form class="ms-4">
             <div class="input-group mb-3">
-                <input type="text" class="form-control bg-warning py-4" aria-label="Text input with dropdown button"
+                <input type="text" class="form-control bg-warning py-4" aria-label="ustensiles"
                     placeholder="Ustensiles">
                 <button data-items="ustensils" data-name="ustensiles"
                     class="btn btn-outline-secondary dropdown-toggle bg-warning text-white border-0" type="button"
@@ -85,6 +84,15 @@
 
     <div id="recipe-container" class="container d-flex flex-wrap justify-content-center justify-content-md-between">
     </div>
+    <footer class="container">
+        <p>
+            <a href="http://jigsaw.w3.org/css-validator/check/referer">
+                <img style="border:0;width:88px;height:31px"
+                    src="http://jigsaw.w3.org/css-validator/images/vcss"
+                    alt="CSS Valide !" />
+            </a>
+        </p>
+    </footer>
 </body>
 
 </html>
