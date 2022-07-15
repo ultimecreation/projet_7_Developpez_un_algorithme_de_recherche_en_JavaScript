@@ -5,8 +5,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     const filterForms = document.querySelectorAll('#form-container form')
     const tagContainer = document.querySelector('#tag-container')
     const mainRecipeSearchInput = document.querySelector('#main-recipe-search')
-
-
+    const mainSearchInput = document.querySelector('#main-recipe-search')
     // FUNCTIONS
     /**
      * create the html for each recipe and insert it in the dom
@@ -46,7 +45,6 @@ window.addEventListener('DOMContentLoaded', async () => {
                     </div>
                 </div>
             `
-
         })
 
         // insert main out in the dom
@@ -94,6 +92,7 @@ window.addEventListener('DOMContentLoaded', async () => {
             parent.style.width = ulStyle.width
             inputGroup.style.width = ulStyle.width
             input.setAttribute('placeholder', inputPlaceHolderString)
+            
         })
     })
 
@@ -132,10 +131,28 @@ window.addEventListener('DOMContentLoaded', async () => {
                 
                 // get tags already selected and insert the new one if not already listed
                 const tagsAlreadySelected = getTagsAlreadySelected()
-                if(!tagsAlreadySelected.includes(linkTextContent)) tagContainer.innerHTML += output                
+                if(!tagsAlreadySelected.includes(linkTextContent)){
+                    tagContainer.innerHTML += output   
+                    const currentForm = e.target.parentElement.parentElement.parentElement.parentElement
+                    const currentBtn = currentForm.querySelector('button')
+                    const inputGroup = currentForm.querySelector('.input-group')
+                    const currentInput = currentForm.querySelector('input')
+                    const currentUl = currentForm.querySelector('ul')
+                    // console.log(currentForm,currentInput,currentUl)
+                    // resetFiltersDisplay()
+                    toggleIcon(currentBtn)
+                    currentUl.style.display = 'none'
+                    currentForm.style.width = '160px'
+                    inputGroup.style.width = '160px'
+                    currentInput.setAttribute('placeholder',`${currentBtn.dataset.name.charAt(0).toUpperCase()}${currentBtn.dataset.name.slice(1)}`)
+                    currentInput.value = ''
+                
+                    handleSearchRoutine()
+                    return
+                }              
             })
         })
-
+        
     })
 
     const getTagsAlreadySelected = ()=>{
@@ -156,10 +173,20 @@ window.addEventListener('DOMContentLoaded', async () => {
      */
     const handleTagDeletionFromTagContainer = () => {
         tagContainer.addEventListener('click', e => {
-
+            // const mainSearchInput = document.querySelector('#main-recipe-search')
+            const mainSearchInputValue = mainSearchInput.value.toLowerCase().trim() 
             // bind the closest button and remove it from the dom
             const itemToRemove = e.target.closest('button')
             itemToRemove.remove()
+            
+            if(getTagsAlreadySelected().length > 0 || mainSearchInputValue.length > 2){
+                handleSearchRoutine()
+                return
+            } 
+
+            displayRecipes(recipesData)
+            populateFilters(recipesData)
+            handleClickOnFiltersLinks()
         })
     }
 
@@ -168,25 +195,29 @@ window.addEventListener('DOMContentLoaded', async () => {
      *
      * @return  {void}  
      */
-    const resetFiltersDisplay = () => {
+    const resetFiltersDisplay = (e) => {
         filterForms.forEach(filterForm => {
-
-            // bind dom elements
-            const inputGroup = filterForm.querySelector('.input-group')
-            const ul = filterForm.querySelector('ul')
-            const icon = filterForm.querySelector('i')
-            const currentBtn = filterForm.querySelector('button')
-            const input = filterForm.querySelector('input')
-            const inputPlaceHolderString = `${currentBtn.dataset.name.charAt(0).toUpperCase()}${currentBtn.dataset.name.slice(1)}`
-
-            // apply the changes on the form and dropdown content
-            inputGroup.style.width = '160px'
-            filterForm.style.width = '160px'
-            ul.style.display = 'none'
-            icon.classList.replace('fa-chevron-up', 'fa-chevron-down')
-            input.setAttribute('placeholder', inputPlaceHolderString)
+            resetSingleFilterDisplay(filterForm)
         })
     }
+
+   const resetSingleFilterDisplay = filterForm => {
+        // bind dom elements
+        const inputGroup = filterForm.querySelector('.input-group')
+        const ul = filterForm.querySelector('ul')
+        const icon = filterForm.querySelector('i')
+        const currentBtn = filterForm.querySelector('button')
+        const input = filterForm.querySelector('input')
+        const inputPlaceHolderString = `${currentBtn.dataset.name.charAt(0).toUpperCase()}${currentBtn.dataset.name.slice(1)}`
+
+        // apply the changes on the form and dropdown content
+        inputGroup.style.width = '160px'
+        filterForm.style.width = '160px'
+        ul.style.display = 'none'
+        icon.classList.replace('fa-chevron-up', 'fa-chevron-down')
+        input.setAttribute('placeholder', inputPlaceHolderString)
+    
+   }
 
     /**
      * toggle the arrow icon up/down 
@@ -306,7 +337,7 @@ window.addEventListener('DOMContentLoaded', async () => {
      const getFilteredRecipeIdsBySearchString =  (searchString) => {
         // initialize arrays to work with
         let filteredRecipeIds = []
-        let filteredRecipes = []
+        
 
         // get matches from ingredients arrays
         const RecipeIdsFromIngredientMatches = recipesData.reduce((accumulator, currentRecipe) => {
@@ -341,48 +372,101 @@ window.addEventListener('DOMContentLoaded', async () => {
         return filteredRecipeIds
     }
 
+    const handleSearchRoutine = ()=> {
+        const tagsAlreadySelected = getTagsAlreadySelected()
+        const mainSearchInputValue = mainSearchInput.value.toLowerCase().trim() 
+
+        if(mainSearchInputValue.length > 2){
+            tagsAlreadySelected.push(mainSearchInputValue)
+        }
+
+        const recipeIdsArraysToMerge =  tagsAlreadySelected.map( searchString =>{
+            return getFilteredRecipeIdsBySearchString(searchString.toLowerCase())
+        })
+
+        // concat arrays and remove duplicate entries with new Set
+        const filteredRecipeIds = [].concat.apply([],recipeIdsArraysToMerge)
+        
+        // no record found, display appropriate message
+        if (filteredRecipeIds.length === 0) {
+            populateFilters([])
+            recipeContainer.innerHTML = `
+                <div class="w-100 text-center">
+                    <i class="fa-solid fa-triangle-exclamation fa-5x text-danger"></i>
+                    <p class="text-center h2 w-75 mx-auto">Aucune recette ne correspond à votre critère "${tagsAlreadySelected.join(',')}".<br>
+                    Vous pouvez chercher "tarte aux pommes", "poisson"</p>
+                </div>
+                
+            `
+            return
+        }
+
+        // some records found, get and display them
+        let filteredRecipes = recipesData.filter(recipe =>  filteredRecipeIds.includes(recipe.id))
+        displayRecipes(filteredRecipes)
+        populateFilters(filteredRecipes)
+        handleClickOnFiltersLinks()
+        
+    }
+
+    const handleSearchOnFilterInputs = ()=>{
+        filterForms.forEach(filterForm => {
+            const input = filterForm.querySelector('input')
+
+            input.addEventListener('keyup', e=> {
+                e.preventDefault()
+                const currentBtn = e.target.nextElementSibling
+                const tagsToUse = getRecipeTags(recipesData).filter(recipeTags=> recipeTags[currentBtn.dataset.items] )[0][currentBtn.dataset.items]
+                const tagsToReturn = tagsToUse.filter(tag => tag.toLowerCase().indexOf(e.target.value.toLowerCase().trim()) !== -1)
+                populateSingleFilter(tagsToReturn,currentBtn.dataset.items)
+                
+                // const currentBtn = e.target.nextElementSibling
+                const ul = currentBtn.nextElementSibling
+                const parent = currentBtn.parentElement.parentElement
+                const inputGroup = filterForm.querySelector('.input-group')
+                const ulStyle = window.getComputedStyle(ul);
+                resetFiltersDisplay()
+                toggleIcon(currentBtn)
+                ul.style.display = 'block'
+                parent.style.width = ulStyle.width
+                inputGroup.style.width = ulStyle.width
+                input.setAttribute('placeholder', `Rechercher un ${currentBtn.dataset.name.slice(0, -1)}`)
+                handleClickOnFiltersLinks()
+            })
+        })
+    }
+
+    const populateSingleFilter = (incomingTags,filterToFill) => {
+        // extract/bind data to populate the dropdowns
+        const tagContainerToFill = document.querySelector(`#${filterToFill}-container`)
+
+        // generate splitted ul in x or y columns
+        if(incomingTags.length < 10) tagContainerToFill.style.columns = 1
+        else if(incomingTags.length < 20 ) tagContainerToFill.style.columns = 2
+        else tagContainerToFill.style.columns = 3
+        
+        // insert dropdowns content in the dom
+        tagContainerToFill.innerHTML = generateStringOutput(incomingTags)
+    }
+
     // INITIALIZATION
     displayRecipes(recipesData)
     populateFilters(recipesData)
-    handleClickOnFiltersBtn()
+    handleSearchOnFilterInputs()
     handleClickOnFiltersLinks()
+    handleClickOnFiltersBtn()
     handleTagDeletionFromTagContainer()
 
     // EVENT LISTENERS
     mainRecipeSearchInput.addEventListener('keyup', e => {
         // bind data
         const mainSearchString = e.target.value.toLowerCase().trim()
-        const tagsAlreadySelected = [...getTagsAlreadySelected(),mainSearchString]
         
         // ignore less than 3 characters search strings
-        if (mainSearchString.length > 2) {
-            const recipeIdsArraysToMerge =  tagsAlreadySelected.map( searchString =>{
-                return getFilteredRecipeIdsBySearchString(searchString.toLowerCase())
-            })
-
-            // concat arrays and remove duplicate entries with new Set
-            filteredRecipeIds = [].concat.apply([],recipeIdsArraysToMerge)
-            
-            // no record found, display appropriate message
-            if (filteredRecipeIds.length === 0) {
-                populateFilters([])
-                recipeContainer.innerHTML = `
-                    <div class="w-100 text-center">
-                        <i class="fa-solid fa-triangle-exclamation fa-5x text-danger"></i>
-                        <p class="text-center h2 w-75 mx-auto">Aucune recette ne correspond à votre critère "${searchString}".<br>
-                        Vous pouvez chercher "tarte aux pommes", "poisson"</p>
-                    </div>
-                    
-                `
-                return
-            }
-
-            // some records found, get and display them
-            filteredRecipes = recipesData.filter(recipe =>  filteredRecipeIds.includes(recipe.id))
-            displayRecipes(filteredRecipes)
-            populateFilters(filteredRecipes)
-            handleClickOnFiltersLinks()
-            return
+        if (mainSearchString.length > 2 || getTagsAlreadySelected().length > 0) {
+            console.log(getTagsAlreadySelected().length)
+            handleSearchRoutine()
+            return    
         }
         displayRecipes(recipesData)
         populateFilters(recipesData)
