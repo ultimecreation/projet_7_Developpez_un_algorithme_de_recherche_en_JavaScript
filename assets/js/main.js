@@ -130,8 +130,8 @@ window.addEventListener('DOMContentLoaded', async () => {
                 `
                 
                 // get tags already selected and insert the new one if not already listed
-                const tagsAlreadySelected = getTagsAlreadySelected()
-                if(!tagsAlreadySelected.includes(linkTextContent)){
+                const tagsAlreadySelected = getTagsAlreadySelected().map(tag=> tag.toLowerCase())
+                if(!tagsAlreadySelected.includes(linkTextContent.toLowerCase())){
                     tagContainer.innerHTML += output   
                     const currentForm = e.target.parentElement.parentElement.parentElement.parentElement
                     const currentBtn = currentForm.querySelector('button')
