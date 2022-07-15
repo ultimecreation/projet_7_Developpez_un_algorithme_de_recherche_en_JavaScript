@@ -61,10 +61,14 @@ window.addEventListener('DOMContentLoaded', async () => {
     const handleClickOnFiltersBtn = () => filterForms.forEach(filterForm => {
         // bind dom element
         const formBtn = filterForm.querySelector('button')
-
+        
         formBtn.addEventListener('click', e => {
             e.preventDefault()
 
+            // reset all inputs to avoid console errors
+            const inputs = document.querySelectorAll('#form-container input')
+            inputs.forEach(input=> input.value='')
+            
             // bind variables
             const currentBtn = e.target.closest('button')
             const icon = currentBtn.querySelector('i')
@@ -74,9 +78,9 @@ window.addEventListener('DOMContentLoaded', async () => {
             const ulStyle = window.getComputedStyle(ul);
             const input = filterForm.querySelector('input')
             const inputPlaceHolderString = icon.classList.contains('fa-chevron-up')
-                ? `${currentBtn.dataset.name.charAt(0).toUpperCase()}${currentBtn.dataset.name.slice(1)}`
-                : `Rechercher un ${currentBtn.dataset.name.slice(0, -1)}`
-
+            ? `${currentBtn.dataset.name.charAt(0).toUpperCase()}${currentBtn.dataset.name.slice(1)}`
+            : `Rechercher un ${currentBtn.dataset.name.slice(0, -1)}`
+            
             // dropdown is already open,the user clicked to close it
             if (icon.classList.contains('fa-chevron-up')) {
                 resetFiltersDisplay()
@@ -91,6 +95,7 @@ window.addEventListener('DOMContentLoaded', async () => {
             ul.style.display = 'block'
             parent.style.width = ulStyle.width
             inputGroup.style.width = ulStyle.width
+            
             input.setAttribute('placeholder', inputPlaceHolderString)
             
         })
