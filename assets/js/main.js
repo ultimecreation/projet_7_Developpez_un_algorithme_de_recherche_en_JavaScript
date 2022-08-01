@@ -153,6 +153,11 @@ window.addEventListener('DOMContentLoaded', async () => {
         })
     }
 
+    /**
+     * perform search on the current filter input and display results
+     *
+     * @return  {void}  
+     */
     const handleSearchOnFilterInputs = () => {
         filterForms.forEach(filterForm => {
             const input = filterForm.querySelector('input')
@@ -180,6 +185,14 @@ window.addEventListener('DOMContentLoaded', async () => {
         })
     }
 
+    /**
+     * display single filter results on 1,2 or 3 colums 
+     *
+     * @param   {[string]}  incomingTags  
+     * @param   {string}  filterToFill  
+     *
+     * @return  {void}                [return description]
+     */
     const populateSingleFilter = (incomingTags, filterToFill) => {
         // extract/bind data to populate the dropdowns
         const tagContainerToFill = document.querySelector(`#${filterToFill}-container`)
@@ -357,6 +370,13 @@ window.addEventListener('DOMContentLoaded', async () => {
 
    
     // SEARCH
+    /**
+     * retrieve recipe ids for the main search input on title/description and ingredients
+     *
+     * @param   {string}  searchString  
+     *
+     * @return  {[integer]}         
+     */
     const getFilteredRecipeIdsByMainSearchString = (searchString) => {
         // initialize arrays to work with
         let filteredRecipeIds = []
@@ -391,9 +411,17 @@ window.addEventListener('DOMContentLoaded', async () => {
 
         // concat arrays and remove duplicate entries with new Set
         filteredRecipeIds = Array.from(new Set([...RecipeIdsFromIngredientMatches, ...RecipeIdsFromTitleOrDescriptionMatches]))
+        console.log(filteredRecipeIds)
         return filteredRecipeIds
     }
 
+    /**
+     * display recipes,related filters and handle clicks on filters
+     * for the main search input
+     * hint: title OR description OR ingredients
+     *
+     * @return  {void}  
+     */
     const handleMainSearchRoutine = () => {
         // const tagsAlreadySelected = getTagsAlreadySelected()
         const mainSearchInputValue = mainSearchInput.value.toLowerCase().trim()
@@ -428,6 +456,13 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     }
 
+    /**
+     * display recipes,related filters and handle clicks on filters
+     * for the tags search inputs
+     * hint: tag1 && tag2 &&.....
+     *
+     * @return  {void} 
+     */
     const handleTagsSearchRoutine = () => {
         const tagsAlreadySelected = getTagsAlreadySelected()
         let recipeIdsArraysToIntersect = []
@@ -470,6 +505,13 @@ window.addEventListener('DOMContentLoaded', async () => {
         handleClickOnFiltersLinks()
     }
 
+    /**
+     * get matching recipe ids on ingredients search
+     *
+     * @param   {string}  searchString  
+     *
+     * @return  {[integer]}                
+     */
     const getRecipesIdsFromIngredientsTagMatches = (searchString) => {
         // get matches from ingredients arrays
         return recipesData.reduce((accumulator, currentRecipe) => {
@@ -490,6 +532,13 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     }
 
+    /**
+     * get matching recipe ids on appliance
+     *
+     * @param   {string}  searchString  
+     *
+     * @return  {[integer]}                
+     */
     const getRecipesIdsFromApplianceTagMatches = (searchString) => {
         // get matches from appliance arrays
         return recipesData.reduce((accumulator, currentRecipe) => {
@@ -504,6 +553,13 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     }
 
+    /**
+     * get matching recipe ids on ustensils
+     *
+     * @param   {string}  searchString  
+     *
+     * @return  {[integer]}                
+     */
     const getRecipesIdsFromUstensilsTagMatches = (searchString) => {
         // get matches from appliance arrays
         return recipesData.reduce((accumulator, currentRecipe) => {
