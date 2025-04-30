@@ -10,3 +10,4 @@ Ces deux implémentations doivent se focaliser uniquement sur le champ de recher
 ## Fiche d'investigation de la solution choisie
 
 [fiche_investigation_072022.pdf](https://github.com/user-attachments/files/19982414/fiche_investigation_072022.pdf)
+
