@@ -7,6 +7,6 @@ Ces deux implémentations doivent se focaliser uniquement sur le champ de recher
 
 ![JSBench results](https://github.com/user-attachments/assets/9a6a5000-f67f-4789-921d-3faca6c93b7b)
 
-## Fiche d'investigation 
+## Fiche d'investigation de la solution choisie
 
 [fiche_investigation_072022.pdf](https://github.com/user-attachments/files/19982414/fiche_investigation_072022.pdf)
